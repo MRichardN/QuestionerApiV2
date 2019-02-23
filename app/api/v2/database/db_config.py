@@ -24,14 +24,13 @@ class DbConnection:
         host = config.DATABASE_HOST
         port = config.DATABASE_PORT
 
-        db_url = 'dbname={} user={} password={} host={} port={}'.format(
-            database, user, password, host, port
-        )
+        dsn = 'dbname={} user={} password={} host={} port={}'.format(
+            database, user, password, host, port)
 
         try:
             global conn, cur
 
-            conn = psycopg2.connect(db_url)
+            conn = psycopg2.connect(dsn)
             cur = conn.cursor(cursor_factory=RealDictCursor)
 
         except Exception as error:
@@ -55,7 +54,7 @@ class DbConnection:
         """ Function to create tables."""
         for query in table_queries:
             cur.execute(query)
-        conn.commit()    
+        conn.commit()   
 
     def seed(self):
         admin = "SELECT * FROM users WHERE isAdmin = True  AND username = 'RichardN'"

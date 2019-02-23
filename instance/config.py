@@ -3,11 +3,10 @@
 """
 import os
 
-class Config(object):
+class Config:
     """Parent configuration class."""
     DEBUG = False
     TESTING = False
-    
     DATABASE_HOST = os.getenv('DATABASE_HOST')
     DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
     DATABASE_USER = os.getenv('DATABASE_USER')

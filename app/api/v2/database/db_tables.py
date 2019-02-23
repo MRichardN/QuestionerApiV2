@@ -4,8 +4,8 @@ tables = [
     'meetups',
     'questions',
     'votes',
-    'comments',    
-    'revoked_tokens'
+    'comments',
+    'revoked_tokens',
     'rsvps'
 ]
 
@@ -65,7 +65,8 @@ table_queries = [
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )
     """,
-     """
+
+    """
     CREATE TABLE IF NOT EXISTS rsvps (
         meetup_id INTEGER NOT NULL,
         user_id INTEGER NOT NULL,

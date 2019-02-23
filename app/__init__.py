@@ -15,6 +15,7 @@ from app.api.v2.views.meetup_views import version2 as v2Meetups
 from app.api.v2.views.comment_views import version2 as v2Comments
 
 from app.api.v2.models.token_model import RevokedTokenModel
+from flask_cors import CORS
 
 
 
@@ -24,6 +25,7 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
+    CORS(app)
 
     # Register version2 Blueprints
     app.register_blueprint(v2Users)
@@ -34,21 +36,8 @@ def create_app(config_name):
     jwt = JWTManager(app)
 
    #db
-    try:
-        conn = DbConnection()
-        print('###At app/__init__.py; conn::', conn)
-
-        conn.db_conn(config_name)
-        print('### config name::', config_name)
-
-        conn.createTables()
-        print('###At app/__init__.py; create tables::', conn.createTables())
-
-        conn.seed() 
-        print('###At app/__init__.py; seed::', conn.seed())
-        
-    except (Exception, psycopg2.Error) as error:
-        print('Error creating db connection', error)  
+    initialize_db(config_name)
+    
 
     @app.route('/', methods=['GET'])
     @app.route('/index', methods=['GET'])
@@ -107,3 +96,23 @@ def create_app(config_name):
             'message': reason
         }), 401
     return app
+
+def initialize_db(config_name):
+    """ Initialize the database."""    
+    try:
+        conn = DbConnection()
+        print('###At app/__init__.py; conn::', conn)
+
+        conn.db_conn(config_name)
+        print('### config name::', config_name)
+        print('### config name::', conn.db_conn(config_name))
+
+        conn.createTables()
+        print('###At app/__init__.py; create tables::', conn.createTables())
+
+        conn.seed() 
+        print('###At app/__init__.py; seed::', conn.seed())
+        
+    except (Exception, psycopg2.Error) as error:
+        print('Error initalizing db', error) 
+
